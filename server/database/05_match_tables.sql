@@ -1,0 +1,42 @@
+SET NAMES utf8mb4;
+
+DROP TABLE IF EXISTS `match_config`;
+CREATE TABLE `match_config` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `config_key` VARCHAR(50) NOT NULL DEFAULT '',
+  `config_value` JSON DEFAULT NULL,
+  `description` VARCHAR(255) NOT NULL DEFAULT '',
+  `site_id` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `delete_time` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_config_key` (`site_id`, `config_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='匹配规则配置表';
+
+DROP TABLE IF EXISTS `match_blacklist`;
+CREATE TABLE `match_blacklist` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `target_user_id` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `type` TINYINT UNSIGNED NOT NULL DEFAULT 1,
+  `reason` VARCHAR(255) NOT NULL DEFAULT '',
+  `site_id` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `delete_time` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_user_target` (`user_id`, `target_user_id`, `type`),
+  KEY `idx_target` (`target_user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='黑名单表';
+
+DROP TABLE IF EXISTS `match_feedback`;
+CREATE TABLE `match_feedback` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `matched_profile_id` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `action` VARCHAR(20) NOT NULL DEFAULT '',
+  `site_id` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='匹配反馈表';
